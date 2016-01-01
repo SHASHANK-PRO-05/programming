@@ -1,17 +1,15 @@
-package part8;
+package indiahacks;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Vector;
 
-public class AkashandtheAssignment1 {
+public class SKITsPatties {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
@@ -22,44 +20,35 @@ public class AkashandtheAssignment1 {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
-		int n = readInt(), q = readInt();
-		StringBuilder builder2 = new StringBuilder(readString());
-		int[][] characters = new int[n][26];
-		for (int i = 0; i < n; i++) {
-			int temp = builder2.charAt(i) - 'a';
-			for (int j = 0; j < 26; j++) {
-				if (j == temp) {
-					if (i == 0)
-						characters[i][j] = 1;
-					else
-						characters[i][j] = characters[i - 1][j] + 1;
-				} else {
-					if (i != 0)
-						characters[i][j] = characters[i - 1][j];
-				}
-			}
+		Map<Long, Boolean> find = new HashMap<>();
+		Vector<Long> addel = new Vector<>();
+		addel.add((long) 0);
+		while (addel.size() != 0) {
+			long temp = addel.remove(0);
+			if (temp + 6 <= 1000000)
+				addel.add(temp + 6);
+			if (temp + 9 <= 1000000)
+				addel.add(temp + 9);
+			if (temp + 20 <= 1000000)
+				addel.add(temp + 20);
+			System.out.println(temp);
+
 		}
-		while (q-- != 0) {
-			int l = readInt() - 1, r = readInt() - 1, k = readInt();
-			int counts = 0;
-			int j;
-			for (j = 0; j < 26; j++) {
-				if (l != 0)
-					counts += characters[r][j] - characters[l - 1][j];
-				else
-					counts += characters[r][j];
-				if (counts >= k)
-					break;
-			}
-			if (j == 26) {
-				builder.append("Out of range\n");
-			} else {
-				builder.append((char) ('a' + j) + "\n");
-			}
+		int t = readInt();
+		while (t-- != 0) {
+
 		}
 		out.println(builder);
 		out.flush();
 		out.close();
+	}
+
+	public static boolean find(long u) {
+		if (u == 0)
+			return true;
+		if (u < 0)
+			return false;
+		return (find(u - 6) || find(u - 9) || find(u - 20));
 	}
 
 	public static int read() throws IOException {
