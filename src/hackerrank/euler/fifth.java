@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.InputMismatchException;
 
-public class first {
+public class fifth {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
@@ -19,19 +19,22 @@ public class first {
 		StringBuilder builder = new StringBuilder();
 		int t = readInt();
 		while (t-- != 0) {
-			long n = readLong() - 1;
-			long numfive = n / 5;
-			long numthree = n / 3;
-			long numfif = n / 15;
-			long ans = (3 * numthree + 3) * numthree;
-			ans = ans + ((5 * numfive + 5) * numfive);
-			ans = ans - ((15 * numfif + 15) * numfif);
-			ans /= 2;
+			int n = readInt();
+			int ans = n;
+			for (int i = n - 1; i > 1; i--) {
+				ans = ans * (i / gcd(ans, i));
+			}
 			builder.append(ans + "\n");
 		}
 		out.print(builder);
 		out.flush();
 		out.close();
+	}
+
+	public static int gcd(int a, int b) {
+		if (b == 0)
+			return a;
+		return gcd(b, a % b);
 	}
 
 	public static int read() throws IOException {

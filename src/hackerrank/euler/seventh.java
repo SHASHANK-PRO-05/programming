@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.InputMismatchException;
+import java.util.Vector;
 
-public class first {
+public class seventh {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
@@ -17,17 +18,24 @@ public class first {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
+
+		boolean[] arr = new boolean[1000000];
+		Vector<Integer> prime = new Vector<>();
+		for (int i = 2; i < arr.length; i += 1) {
+			if (!arr[i]) {
+				prime.add(i);
+				if (prime.size() == 10001)
+					break;
+				int j = i * i;
+				if (j > 0)
+					for (; j < arr.length; j += i) {
+						arr[j] = true;
+					}
+			}
+		}
 		int t = readInt();
 		while (t-- != 0) {
-			long n = readLong() - 1;
-			long numfive = n / 5;
-			long numthree = n / 3;
-			long numfif = n / 15;
-			long ans = (3 * numthree + 3) * numthree;
-			ans = ans + ((5 * numfive + 5) * numfive);
-			ans = ans - ((15 * numfif + 15) * numfif);
-			ans /= 2;
-			builder.append(ans + "\n");
+			builder.append(prime.get(readInt() - 1) + "\n");
 		}
 		out.print(builder);
 		out.flush();

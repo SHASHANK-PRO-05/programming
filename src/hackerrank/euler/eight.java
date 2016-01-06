@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.InputMismatchException;
 
-public class first {
+public class eight {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
@@ -19,15 +19,17 @@ public class first {
 		StringBuilder builder = new StringBuilder();
 		int t = readInt();
 		while (t-- != 0) {
-			long n = readLong() - 1;
-			long numfive = n / 5;
-			long numthree = n / 3;
-			long numfif = n / 15;
-			long ans = (3 * numthree + 3) * numthree;
-			ans = ans + ((5 * numfive + 5) * numfive);
-			ans = ans - ((15 * numfif + 15) * numfif);
-			ans /= 2;
-			builder.append(ans + "\n");
+			int n = readInt(), k = readInt();
+			StringBuilder builder2 = new StringBuilder(readString());
+			int maxProd = Integer.MIN_VALUE;
+			for (int i = 0; i <= n - k; i++) {
+				int tempAns = 1;
+				for (int j = i; j < k + i; j++) {
+					tempAns = tempAns * (builder2.charAt(j) - '0');
+				}
+				maxProd = Math.max(maxProd, tempAns);
+			}
+			builder.append(maxProd + "\n");
 		}
 		out.print(builder);
 		out.flush();

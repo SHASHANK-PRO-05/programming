@@ -4,34 +4,60 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Vector;
 
-public class first {
+public class second {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
 	static InputStream stream;
 	static PrintWriter out;
+	static Vector<Long> vector = new Vector<>();
+	static long ans = 2;
+	static HashMap<Long, Long> map = new HashMap<>();
 
 	public static void main(String[] args) throws InputMismatchException, IOException {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
 		int t = readInt();
+		vector.add(1L);
+		vector.add(2L);
+		map.put(1L, 0L);
+		map.put(2L, 2L);
 		while (t-- != 0) {
-			long n = readLong() - 1;
-			long numfive = n / 5;
-			long numthree = n / 3;
-			long numfif = n / 15;
-			long ans = (3 * numthree + 3) * numthree;
-			ans = ans + ((5 * numfive + 5) * numfive);
-			ans = ans - ((15 * numfif + 15) * numfif);
-			ans /= 2;
-			builder.append(ans + "\n");
+			long n = readLong();
+			add(n);
+			builder.append(find(n) + "\n");
 		}
 		out.print(builder);
 		out.flush();
 		out.close();
+	}
+
+	public static long find(long n) {
+		long res = 0;
+		for (int i = vector.size() - 1; i >= 0; i--) {
+			if (vector.get(i) <= n) {
+				res = map.get(vector.get(i));
+				break;
+			}
+		}
+		return res;
+	}
+
+	public static void add(long n) {
+		Long temp = vector.lastElement();
+		while (temp < n) {
+			temp = temp + vector.get(vector.size() - 2);
+			if ((temp & 1) == 0) {
+				ans += temp;
+			}
+			vector.add(temp);
+			map.put(temp, ans);
+		}
 	}
 
 	public static int read() throws IOException {
