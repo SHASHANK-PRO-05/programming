@@ -20,7 +20,7 @@ public class boilerPlate {
 		while(t--!=0){
 //			long a=readLong(),b=readLong(),c=readLong(),k=re;
 		}
-		out.println(builder);
+		out.print(builder);
 		out.flush();
 		out.close();
 	}
