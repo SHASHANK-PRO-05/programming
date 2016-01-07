@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,13 +11,14 @@ public class boilerPlate {
 	static byte[] buffer = new byte[1024];
 	static InputStream stream;
 	static PrintWriter out;
-	public static void main(String[] args) throws InputMismatchException,IOException {
-		stream=System.in;
-		out=new PrintWriter(new BufferedOutputStream(System.out));
-		StringBuilder builder=new StringBuilder();
-		int t=readInt();
-		while(t--!=0){
-//			long a=readLong(),b=readLong(),c=readLong(),k=re;
+
+	public static void main(String[] args) throws InputMismatchException, IOException {
+		stream = System.in;
+		out = new PrintWriter(new BufferedOutputStream(System.out));
+		StringBuilder builder = new StringBuilder();
+		int t = readInt();
+		while (t-- != 0) {
+
 		}
 		out.print(builder);
 		out.flush();
@@ -75,7 +75,7 @@ public class boilerPlate {
 		StringBuilder builder = new StringBuilder();
 		while (!isSpaceChar(c)) {
 			builder.append((char) c);
-			c=read();
+			c = read();
 		}
 		return builder.toString();
 	}
