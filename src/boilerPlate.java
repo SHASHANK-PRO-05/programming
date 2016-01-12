@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.InputMismatchException;
-import java.util.Map;
 
 public class boilerPlate {
 	static int numChar;
@@ -17,17 +16,16 @@ public class boilerPlate {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
-		
+
 		int t = readInt();
 		while (t-- != 0) {
-			
+
 		}
 		out.print(builder);
 		out.flush();
 		out.close();
 	}
 
-	
 	public static int read() throws IOException {
 		if (numChar <= curChar) {
 			curChar = 0;
