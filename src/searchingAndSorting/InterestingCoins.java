@@ -4,12 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 
-import javax.swing.plaf.synth.SynthStyle;
-
-public class MehtaAndSubarrays {
+public class InterestingCoins {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
@@ -19,38 +16,65 @@ public class MehtaAndSubarrays {
 	public static void main(String[] args) throws InputMismatchException, IOException {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
-		int n = readInt();
-		Point[] points = new Point[n + 1];
-		points[0] = new Point();
-		points[0].sum = 0;
-		points[0].index = 1;
-		long sum = 0;
-		for (int i = 1; i <= n; i++) {
-			long x = readLong();
-			sum += x;
-			points[i] = new Point();
-			points[i].sum = sum;
-			points[i].index = i + 1;
-		}
-		Arrays.sort(points);
-		long ans = 0, ansNum = 0;
-		long mn = points[0].index;
-		for (int i = 1; i <= n; i++) {
-			long val = Math.max(0, points[i].index - mn);
-			if (val > ans) {
-				ans = val;
-				ansNum = 1;
-			} else if (val == ans) {
-				ansNum++;
+		StringBuilder builder = new StringBuilder();
+		int t = readInt();
+		while (t-- != 0) {
+			int n = readInt();
+			boolean foundIn = false;
+			long[] arr = new long[n];
+			arr[0] = readLong();
+			for (int i = 1; i < n; i++) {
+				arr[i] = readLong();
+				if (arr[i] <= arr[i - 1])
+					foundIn = true;
 			}
-			mn = Math.min(mn, points[i].index);
+			if (!foundIn) {
+				builder.append("0\n");
+			} else {
+				int temp = 1;
+				while (!checkIt(arr, temp, n)) {
+					temp *= 2;
+				}
+				builder.append(binarySearch(temp / 2 + 1, temp, arr, n) + "\n");
+			}
 		}
-		if (ans == 0)
-			out.print("-1");
-		else
-			out.print(ans + " " + ansNum);
+		out.print(builder);
 		out.flush();
 		out.close();
+	}
+
+	public static int binarySearch(int lo, int high, long[] arr, int n) {
+		int start = lo, end = high, mid = 0;
+		while (start <= end) {
+			mid = (start + end) / 2;
+			if (checkIt(arr, mid, n) && (mid == lo || !checkIt(arr, mid - 1, n))) {
+				break;
+			}
+			if (checkIt(arr, mid, n))
+				end = mid - 1;
+			else if (!checkIt(arr, mid, n))
+				start = mid + 1;
+		}
+		return mid;
+	}
+
+	public static boolean checkIt(long[] arr, long num, int n) {
+		long[] A = new long[n];
+		for (int i = 0; i < n; i++) {
+			A[i] = arr[i];
+		}
+		A[0] = Math.max(1, A[0] - num);
+		for (int i = 1; i < n; i++) {
+			if (A[i] > A[i - 1]) {
+				A[i] = Math.max(A[i - 1] + 1, A[i] - num);
+			} else {
+				A[i] = Math.min(A[i - 1] + 1, A[i] + num);
+			}
+			if (A[i] <= A[i - 1]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static int read() throws IOException {
@@ -111,27 +135,4 @@ public class MehtaAndSubarrays {
 	public static boolean isSpaceChar(int c) {
 		return c == ' ' || c == '\n' || c == '\t' || c == '\r' || c == -1;
 	}
-}
-
-class Point implements Comparable<Point> {
-	long sum;
-	long index;
-
-	@Override
-	public int compareTo(Point o) {
-		if (this.sum > o.sum) {
-			return 1;
-		} else if (this.sum < o.sum) {
-			return -1;
-		} else {
-			if (this.index > o.index)
-				return 1;
-			else if (this.index < o.index) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
-	}
-
 }

@@ -7,9 +7,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 
-import javax.swing.plaf.synth.SynthStyle;
-
-public class MehtaAndSubarrays {
+public class MonksChoiceofNumbers {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
@@ -19,38 +17,39 @@ public class MehtaAndSubarrays {
 	public static void main(String[] args) throws InputMismatchException, IOException {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
-		int n = readInt();
-		Point[] points = new Point[n + 1];
-		points[0] = new Point();
-		points[0].sum = 0;
-		points[0].index = 1;
-		long sum = 0;
-		for (int i = 1; i <= n; i++) {
-			long x = readLong();
-			sum += x;
-			points[i] = new Point();
-			points[i].sum = sum;
-			points[i].index = i + 1;
-		}
-		Arrays.sort(points);
-		long ans = 0, ansNum = 0;
-		long mn = points[0].index;
-		for (int i = 1; i <= n; i++) {
-			long val = Math.max(0, points[i].index - mn);
-			if (val > ans) {
-				ans = val;
-				ansNum = 1;
-			} else if (val == ans) {
-				ansNum++;
+		StringBuilder builder = new StringBuilder();
+
+		int t = readInt();
+		while (t-- != 0) {
+			int n = readInt();
+			int k = readInt();
+			findMaxBinary[] fm = new findMaxBinary[n];
+			for (int i = 0; i < n; i++) {
+				int num = readInt();
+				fm[i] = new findMaxBinary();
+				fm[i].number = num;
+				fm[i].num1 = findOnes(num);
 			}
-			mn = Math.min(mn, points[i].index);
+			Arrays.sort(fm);
+			int res = 0;
+			for (int i = 0; i < k; i++) {
+				res += fm[i].num1;
+			}
+			builder.append(res + "\n");
 		}
-		if (ans == 0)
-			out.print("-1");
-		else
-			out.print(ans + " " + ansNum);
+		out.print(builder);
 		out.flush();
 		out.close();
+	}
+
+	public static int findOnes(int num) {
+		int res = 0;
+		while (num != 0) {
+			if ((num & 1) != 0)
+				res++;
+			num = num >> 1;
+		}
+		return res;
 	}
 
 	public static int read() throws IOException {
@@ -113,25 +112,17 @@ public class MehtaAndSubarrays {
 	}
 }
 
-class Point implements Comparable<Point> {
-	long sum;
-	long index;
+class findMaxBinary implements Comparable<findMaxBinary> {
+	int number;
+	int num1;
 
 	@Override
-	public int compareTo(Point o) {
-		if (this.sum > o.sum) {
-			return 1;
-		} else if (this.sum < o.sum) {
+	public int compareTo(findMaxBinary o) {
+		if (this.num1 > o.num1) {
 			return -1;
-		} else {
-			if (this.index > o.index)
-				return 1;
-			else if (this.index < o.index) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
+		} else if (this.num1 < o.num1)
+			return 1;
+		return 0;
 	}
 
 }
