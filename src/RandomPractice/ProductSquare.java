@@ -6,81 +6,39 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.InputMismatchException;
 
-public class HungryLemurs {
+public class ProductSquare {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
 	static InputStream stream;
 	static PrintWriter out;
-	static int min = Integer.MAX_VALUE;
 
 	public static void main(String[] args) throws InputMismatchException, IOException {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
-		int n = readInt(), k = readInt();
-		for (int i = 1; i <= 2 * k; i++) {
-			min = Math.min(min, Math.abs(k - i) + Math.min(n % i, i - n % i));
+
+		int n = readInt();
+		int[] arr = new int[n];
+		for (int i = 0; i < n; i++) {
+			arr[i] = readInt();
 		}
-		out.println(min);
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				long temp = arr[i] * arr[j];
+				long dummy = (long) Math.sqrt(temp);
+				if (dummy * dummy == temp) {
+					count++;
+				}
+			}
+		}
+		int den = n * (n - 1) / 2;
+		double result = (double) count / (double) den;
+		String str = String.format("%.6f", result);
+		out.print(str);
 		out.flush();
 		out.close();
-	}
-
-	public static void bandiscard(int n, int k, int mini) {
-		k = k - 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandiscard(n, k, mini);
-		perinc(n, k, mini);
-		perdec(n, k, mini);
-	}
-
-	public static void bandinc(int n, int k, int mini) {
-		k = k + 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perinc(n, k, mini);
-		perdec(n, k, mini);
-	}
-
-	public static void perinc(int n, int k, int mini) {
-		n = n + 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perinc(n, k, mini);
-		bandiscard(n, k, mini);
-	}
-
-	public static void perdec(int n, int k, int mini) {
-		n = n - 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perdec(n, k, mini);
-		bandiscard(n, k, mini);
 	}
 
 	public static int read() throws IOException {

@@ -1,4 +1,4 @@
-package RandomPractice;
+package hackerrank;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -6,81 +6,29 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.InputMismatchException;
 
-public class HungryLemurs {
+public class FindPoint {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
 	static InputStream stream;
 	static PrintWriter out;
-	static int min = Integer.MAX_VALUE;
 
 	public static void main(String[] args) throws InputMismatchException, IOException {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
-		int n = readInt(), k = readInt();
-		for (int i = 1; i <= 2 * k; i++) {
-			min = Math.min(min, Math.abs(k - i) + Math.min(n % i, i - n % i));
+
+		int t = readInt();
+		while (t-- != 0) {
+			int x1 = readInt(), y1 = readInt();
+			int x2 = readInt(), y2 = readInt();
+			int x3 = x2 * 2 - x1;
+			int y3 = y2 * 2 - y1;
+			builder.append(x3 + " " + y3 + "\n");
 		}
-		out.println(min);
+		out.print(builder);
 		out.flush();
 		out.close();
-	}
-
-	public static void bandiscard(int n, int k, int mini) {
-		k = k - 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandiscard(n, k, mini);
-		perinc(n, k, mini);
-		perdec(n, k, mini);
-	}
-
-	public static void bandinc(int n, int k, int mini) {
-		k = k + 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perinc(n, k, mini);
-		perdec(n, k, mini);
-	}
-
-	public static void perinc(int n, int k, int mini) {
-		n = n + 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perinc(n, k, mini);
-		bandiscard(n, k, mini);
-	}
-
-	public static void perdec(int n, int k, int mini) {
-		n = n - 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perdec(n, k, mini);
-		bandiscard(n, k, mini);
 	}
 
 	public static int read() throws IOException {

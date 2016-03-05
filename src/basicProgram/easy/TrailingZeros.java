@@ -1,4 +1,4 @@
-package RandomPractice;
+package basicProgram.easy;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -6,81 +6,26 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.InputMismatchException;
 
-public class HungryLemurs {
+public class TrailingZeros {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
 	static InputStream stream;
 	static PrintWriter out;
-	static int min = Integer.MAX_VALUE;
 
 	public static void main(String[] args) throws InputMismatchException, IOException {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
-		int n = readInt(), k = readInt();
-		for (int i = 1; i <= 2 * k; i++) {
-			min = Math.min(min, Math.abs(k - i) + Math.min(n % i, i - n % i));
+		int n = readInt();
+		int ans = 0;
+		while (n != 0) {
+			ans += n / 5;
+			n = n / 5;
 		}
-		out.println(min);
+		out.print(ans);
 		out.flush();
 		out.close();
-	}
-
-	public static void bandiscard(int n, int k, int mini) {
-		k = k - 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandiscard(n, k, mini);
-		perinc(n, k, mini);
-		perdec(n, k, mini);
-	}
-
-	public static void bandinc(int n, int k, int mini) {
-		k = k + 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perinc(n, k, mini);
-		perdec(n, k, mini);
-	}
-
-	public static void perinc(int n, int k, int mini) {
-		n = n + 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perinc(n, k, mini);
-		bandiscard(n, k, mini);
-	}
-
-	public static void perdec(int n, int k, int mini) {
-		n = n - 1;
-		mini++;
-		if (mini >= min)
-			return;
-		if (n % k == 0) {
-			min = mini;
-			return;
-		}
-		bandinc(n, k, mini);
-		perdec(n, k, mini);
-		bandiscard(n, k, mini);
 	}
 
 	public static int read() throws IOException {
