@@ -4,10 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 
-public class MyPrime {
+public class RoysBooleanFunction {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
@@ -18,25 +17,42 @@ public class MyPrime {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
-		int n = readInt();
-		int[] arr = new int[n];
-		for (int i = 0; i < n; i++) {
-			arr[i] = readInt();
-		}
-		for (int i = 0; i < n; i++) {
-			boolean found = true;
-			for (int j = 0; j < n; j++) {
-				if (i != j && arr[i] % arr[j] == 0) {
-					found = false;
+		boolean[] prime = new boolean[100001];
+		prime[0] = true;
+		prime[1] = true;
+		for (int i = 2; i < (100001); i++) {
+			if (!prime[i]) {
+				int j = i * i;
+				while (j > 0 && j < 100001) {
+					prime[j] = true;
+					j = j + i;
 				}
 			}
-			if (found) {
-				builder.append(arr[i] + " ");
+		}
+		int t = readInt();
+		while (t-- != 0) {
+			int n = readInt();
+			int num = 0;
+			for (int i = 1; i < n; i++) {
+				if (gcd(n, i) == 1) {
+					num++;
+				}
+			}
+			if (!prime[num]) {
+				builder.append("TRUE\n");
+			} else {
+				builder.append("FALSE\n");
 			}
 		}
 		out.print(builder);
 		out.flush();
 		out.close();
+	}
+
+	public static int gcd(int a, int b) {
+		if (b == 0)
+			return a;
+		return gcd(b, a % b);
 	}
 
 	public static int read() throws IOException {

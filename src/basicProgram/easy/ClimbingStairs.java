@@ -4,10 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 
-public class MyPrime {
+public class ClimbingStairs {
 	static int numChar;
 	static int curChar;
 	static byte[] buffer = new byte[1024];
@@ -18,23 +17,9 @@ public class MyPrime {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
-		int n = readInt();
-		int[] arr = new int[n];
-		for (int i = 0; i < n; i++) {
-			arr[i] = readInt();
-		}
-		for (int i = 0; i < n; i++) {
-			boolean found = true;
-			for (int j = 0; j < n; j++) {
-				if (i != j && arr[i] % arr[j] == 0) {
-					found = false;
-				}
-			}
-			if (found) {
-				builder.append(arr[i] + " ");
-			}
-		}
-		out.print(builder);
+		long a = readLong(), b = readLong(), n = readLong();
+		long ans = (n - b) / (a - b) + ((n - b) % (a - b) != 0 ? 1 : 0);
+		out.print(ans);
 		out.flush();
 		out.close();
 	}
