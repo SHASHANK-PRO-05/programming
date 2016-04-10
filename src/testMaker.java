@@ -7,8 +7,16 @@ public class testMaker {
 		PrintWriter pw = new PrintWriter("text.txt");
 		pw.println(t);
 		while (t-- != 0) {
-			pw.println((long) (Math.random() * 1000) + " " + (long) (Math.random() * 1e9) + " "
-					+ (long) (Math.random() * 1e15));
+			int caseQ = (int) (Math.random() * 5);
+			if (caseQ == 0)
+				caseQ++;
+			if (caseQ == 5)
+				caseQ--;
+			if (caseQ == 1 || caseQ == 2) {
+				pw.println(caseQ + " " + (int) (Math.random() * 100000));
+			} else {
+				pw.println(caseQ);
+			}
 		}
 		pw.flush();
 		pw.close();
