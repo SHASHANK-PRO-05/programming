@@ -4,11 +4,72 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
+import java.util.Scanner;
+
+class Team implements Comparable<Team> {
+	String name;
+	int points;
+	int gamesPlayed;
+	int scored;
+	int suffered;
+
+	@Override
+	public int compareTo(Team t) {
+		if (this.points > t.points) {
+			return -1;
+		} else if (this.points < t.points) {
+			return 1;
+		} else {
+			if (this.scored - this.suffered > t.scored - t.suffered) {
+				return -1;
+			} else if (this.scored - this.suffered < t.scored - t.suffered) {
+				return 1;
+			} else {
+				if (this.scored > t.scored) {
+					return -1;
+				} else if (this.scored < t.scored) {
+					return 1;
+				} else {
+					return this.name.compareTo(t.name);
+				}
+			}
+		}
+	}
+
+}
+
+class CompareSort implements Comparator<Team> {
+
+	@Override
+	public int compare(Team t1, Team t2) {
+
+		if (t1.points > t2.points) {
+			return -1;
+		} else if (t1.points < t2.points) {
+			return 1;
+		} else {
+			if (t1.scored - t1.suffered > t2.scored - t2.suffered) {
+				return -1;
+			} else if (t1.scored - t1.suffered < t2.scored - t2.suffered) {
+				return 1;
+			} else {
+				if (t1.scored > t2.scored) {
+					return -1;
+				} else if (t1.scored < t2.scored) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		}
+	}
+
+}
 
 public class p10698 {
 	static int numChar;
@@ -21,91 +82,58 @@ public class p10698 {
 		stream = System.in;
 		out = new PrintWriter(new BufferedOutputStream(System.out));
 		StringBuilder builder = new StringBuilder();
-
-		int t = readInt();
-		int g = readInt();
-		while (t != 0) {
-			Team[] teams = new Team[t];
+		Scanner sc = new Scanner(System.in);
+		while (sc.hasNext()) {
+			int numbeOfTeams = sc.nextInt();
+			int games = sc.nextInt();
 			Map<String, Integer> map = new HashMap<>();
-			for (int i = 0; i < t; i++) {
-				String s = readString();
-				map.put(s, i);
+			Team[] teams = new Team[numbeOfTeams];
+			for (int i = 0; i < numbeOfTeams; i++) {
+				String name = sc.next();
+				map.put(name, i);
 				teams[i] = new Team();
-				teams[i].name = s;
+				teams[i].name = name;
 			}
-			while (g-- != 0) {
-				String name1 = readString();
-				int goal1 = readInt();
-				readString();
-				int goal2 = readInt();
-				String name2 = readString();
-				int i = map.get(name1);
-				int j = map.get(name2);
-				if (goal1 > goal2) {
-					teams[i].points += 3;
-				} else if (goal2 > goal1) {
-					teams[i].points += 3;
+			while (games-- != 0) {
+				String team1 = sc.next();
+				int scored1 = sc.nextInt();
+				sc.next();
+				int scored2 = sc.nextInt();
+				String team2 = sc.next();
+				int pos1 = map.get(team1);
+				int pos2 = map.get(team2);
+				teams[pos2].gamesPlayed = +1;
+				teams[pos1].gamesPlayed = +1;
+				teams[pos2].scored += scored2;
+				teams[pos2].suffered += scored1;
+				teams[pos1].scored += scored1;
+				teams[pos1].suffered += scored2;
+				if (scored1 > scored2) {
+					teams[pos1].points = +3;
+				} else if (scored1 < scored2) {
+					teams[pos2].points = +3;
 				} else {
-					teams[i].points += 1;
-					teams[j].points += 1;
+					teams[pos2].points = +1;
+					teams[pos1].points = +1;
 				}
-				teams[i].numberGames++;
-				teams[j].numberGames++;
-				teams[i].forGoals += goal1;
-				teams[i].againstGoals += goal2;
-				teams[j].forGoals += goal2;
-				teams[j].againstGoals += goal1;
 			}
 			Arrays.sort(teams);
-			builder.append("1. ");
-			int temp = 15 - teams[0].name.length();
-			while (temp-- != 0) {
-				builder.append(" ");
+			System.out.print("1.               " + teams[0].name + " " + teams[0].points + " " + teams[0].gamesPlayed
+					+ " " + teams[0].scored + " " + teams[0].suffered + " " + (teams[0].scored - teams[0].suffered)
+					+ " ");
+			if (teams[0].gamesPlayed != 0) {
+				System.out.print(((double) (teams[0].points) * 100) / ((double) teams[0].gamesPlayed * 3) + "\n");
+			}else{
+				
 			}
-			builder.append(
-					teams[0].name + "  " + teams[0].points + "  " + teams[0].numberGames + " " + teams[0].forGoals + " "
-							+ teams[0].againstGoals + " " + (teams[0].forGoals - teams[0].againstGoals));
-			String percentage = "N/A";
-			if (teams[0].numberGames != 0) {
-				percentage = new String(((new BigDecimal((teams[0].points * 100 / (teams[0].numberGames * 3)) + ""))
-						.setScale(3, BigDecimal.ROUND_HALF_UP)).toString());
-			}
-			builder.append(" " + percentage + "\n");
-			for (int i = 1; i < t; i++) {
-				if (teams[i].newCompare(teams[i - 1]) == 0) {
-					builder.append("   ");
-					temp = 15 - teams[i].name.length();
-					while (temp-- != 0) {
-						builder.append(" ");
-					}
-					builder.append(teams[i].name +"  " + teams[i].points + "  " + teams[i].numberGames + " " + teams[i].forGoals + " "
-							+ teams[i].againstGoals + " " + (teams[i].forGoals - teams[i].againstGoals));
-					percentage = "N/A";
-					if (teams[i].numberGames != 0) {
-						percentage = new String(
-								((new BigDecimal((teams[0].points * 100 / (teams[0].numberGames * 3)) + "")).setScale(3,
-										BigDecimal.ROUND_HALF_UP)).toString());
-					}
-					builder.append(" " + percentage + "\n");
+			CompareSort cs = new CompareSort();
+			for (int i = 1; i < teams.length; i++) {
+				if (cs.compare(teams[i], teams[i - 1]) == 0) {
+					System.out.print("                 ");
 				} else {
-					builder.append((i + 1) + ". ");
-					temp = 15 - teams[i].name.length();
-					while (temp-- != 0) {
-						builder.append(" ");
-					}
-					builder.append(teams[1].name +"  " + teams[i].points + "  " + teams[i].numberGames + " " + teams[i].forGoals + " "
-							+ teams[i].againstGoals + " " + (teams[i].forGoals - teams[i].againstGoals));
-					percentage = "N/A";
-					if (teams[i].numberGames != 0) {
-						percentage = new String(
-								((new BigDecimal((teams[0].points * 100 / (teams[0].numberGames * 3)) + "")).setScale(3,
-										BigDecimal.ROUND_HALF_UP)).toString());
-					}
-					builder.append(" " + percentage + "\n");
+					System.out.print((i + 1) + ".               ");
 				}
 			}
-			t = readInt();
-			g = readInt();
 		}
 		out.print(builder);
 		out.flush();
@@ -169,58 +197,5 @@ public class p10698 {
 
 	public static boolean isSpaceChar(int c) {
 		return c == ' ' || c == '\n' || c == '\t' || c == '\r' || c == -1;
-	}
-}
-
-class Team implements Comparable<Team> {
-	String name;
-	int numberGames;
-	int forGoals;
-	int againstGoals;
-	int points;
-
-	@Override
-	public int compareTo(Team o) {
-		if (this.points > o.points) {
-			return -1;
-		} else if (this.points < o.points) {
-			return 1;
-		} else {
-			if (this.forGoals - this.againstGoals > o.forGoals - o.againstGoals) {
-				return -1;
-			} else if (this.forGoals - this.againstGoals < o.forGoals - o.againstGoals) {
-				return 1;
-			} else {
-				if (this.forGoals > o.forGoals) {
-					return -1;
-				} else if (this.forGoals < o.forGoals) {
-					return 1;
-				} else {
-					return this.name.compareTo(o.name);
-				}
-			}
-		}
-	}
-
-	public int newCompare(Team o) {
-		if (this.points > o.points) {
-			return -1;
-		} else if (this.points < o.points) {
-			return 1;
-		} else {
-			if (this.forGoals - this.againstGoals > o.forGoals - o.againstGoals) {
-				return -1;
-			} else if (this.forGoals - this.againstGoals < o.forGoals - o.againstGoals) {
-				return 1;
-			} else {
-				if (this.forGoals > o.forGoals) {
-					return -1;
-				} else if (this.forGoals < o.forGoals) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-		}
 	}
 }
